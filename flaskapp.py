@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template
 
 password = "password123"
+a = 100
 
 app = Flask(__name__)
 @app.route('/')
