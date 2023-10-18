@@ -1,0 +1,35 @@
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  code-scanning:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Code Scanning
+        id: code-scanning
+        run: |
+          # Run your code scanning tools here
+          # Set a flag if an error is detected
+          # Example: ERROR_DETECTED=true
+          if [error_detected]; then
+            echo "::set-output name=ERROR_DETECTED::true"
+          fi
+
+      - name: Check for Errors
+        if: failure()
+        run: |
+          echo "Code scanning error detected. Disabling pull request."
+          exit 1
+
+      - name: Additional Check
+        if: steps.code-scanning.outputs.ERROR_DETECTED == 'true'
+        run: |
+          echo "Additional error detected. Disabling pull request."
+          exit 1
